@@ -1,8 +1,6 @@
 /**
  * 
- * @param {import('sequelize').Sequelize} sequelize 
- * @param {import('sequelize').DataTypes} DataTypes 
- * @returns 
+ * @param {import('sequelize').Sequelize} sequelize
  */
 
 const PostCategoryModel= (sequelize, _DataTypes) => {
@@ -17,16 +15,16 @@ const PostCategoryModel= (sequelize, _DataTypes) => {
 
   PostCategory.associate = (models) => {
     models.BlogPost.belongsToMany(models.Category, {
-      as: 'categories',
-      through: PostCategory,
       foreignKey: 'postId',
       otherKey: 'categoryId',
+      through: PostCategory,
+      as: 'categories',
     });
     models.Category.belongsToMany(models.BlogPost, {
-      as: 'blogPosts',
-      through: PostCategory,
       foreignKey: 'categoryId',
       otherKey: 'postId',
+      through: PostCategory,
+      as: 'blogPosts',
     });
   };
 

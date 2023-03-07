@@ -1,5 +1,6 @@
 const express = require('express');
-const controllers = require('./controllers');
+const login = require('./controllers/login');
+const { createUser } = require('./controllers/userController');
 
 const app = express();
 
@@ -10,6 +11,7 @@ app.get('/', (_request, response) => {
 
 app.use(express.json());
 
-app.post('/login', controllers.login);
+app.post('/login', login);
+app.post('/user', createUser);
 
 module.exports = app;

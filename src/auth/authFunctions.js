@@ -8,4 +8,6 @@ const JWT_CONFIG = {
 
 const createToken = (data) => jwt.sign({ data }, secret, JWT_CONFIG);
 
-module.exports = { createToken };
+const verifyToken = (token) => jwt.verify(token, secret);
+
+module.exports = { createToken, verifyToken };

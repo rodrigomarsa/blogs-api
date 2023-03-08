@@ -1,6 +1,8 @@
 const { User } = require('../models');
 const { validateNewUser } = require('./validations/validateNewUser');
 
+const getByEmail = async (email) => User.findOne({ where: { email } });
+
 const createUser = async ({ displayName, email, password, image }) => {
   const error = await validateNewUser(displayName, email, password);
   if (error.type) return error;
@@ -10,10 +12,6 @@ const createUser = async ({ displayName, email, password, image }) => {
   return { type: null, message: newUser };
 };
 
-const getUsers = () => User.findAll();
-
-const getByEmail = async (email) => User.findOne({ where: { email } });
-
 const getByUserId = async (userId) => {
   const user = await User.findByPk(userId, { attributes: { exclude: ['password'] } });
   if (!user) return { type: 'USER_NOT_EXIST', message: 'User does not exist' };
@@ -21,9 +19,15 @@ const getByUserId = async (userId) => {
   return { type: null, message: user };
 };
 
+const getUsers = async () => {
+  const users = await User.findAll({ attributes: { exclude: ['password'] } });
+
+  return { type: null, message: users };
+};
+
 module.exports = {
-  createUser,
-  getUsers,
   getByEmail,
+  createUser,
   getByUserId,
+  getUsers,
 };

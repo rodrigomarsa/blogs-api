@@ -1,6 +1,6 @@
 const express = require('express');
 const login = require('./controllers/login');
-const { createUser, getByUserId } = require('./controllers/userController');
+const { createUser, getUsers, getByUserId } = require('./controllers/userController');
 const validateToken = require('./middlewares/validateToken');
 
 const app = express();
@@ -14,6 +14,7 @@ app.use(express.json());
 
 app.post('/login', login);
 app.post('/user', createUser);
+app.get('/user', validateToken, getUsers);
 app.get('/user/:id', validateToken, getByUserId);
 
 module.exports = app;

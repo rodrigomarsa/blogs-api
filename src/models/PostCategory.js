@@ -1,11 +1,15 @@
 /**
  * 
  * @param {import('sequelize').Sequelize} sequelize
+ * @param {import('sequelize').DataTypes} DataTypes 
  */
 
-const PostCategoryModel= (sequelize, _DataTypes) => {
+const PostCategoryModel= (sequelize, DataTypes) => {
   const PostCategory = sequelize.define('PostCategory',
-    {},
+    {
+      postId: DataTypes.INTEGER,
+      categoryId: DataTypes.INTEGER,
+    },
     {
       timestamps: false,
       tableName: 'posts_categories',

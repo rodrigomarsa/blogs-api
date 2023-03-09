@@ -1,5 +1,7 @@
 const Joi = require('joi');
 
+const ERROR_MESSAGE = 'Some required fields are missing';
+
 const addUserSchema = Joi.object().keys({
   displayName: Joi.string().min(8).required().messages({
     'string.min': '"displayName" length must be at least 8 characters long',
@@ -21,7 +23,24 @@ const addCategorySchema = Joi.object().keys({
   }),
 });
 
+const addPostSchema = Joi.object().keys({
+  title: Joi.string().min(1).required().messages({
+    'string.empty': ERROR_MESSAGE,
+    'string.base': ERROR_MESSAGE,
+    'any.required': ERROR_MESSAGE,
+  }),
+  content: Joi.string().min(1).required().messages({
+    'string.empty': ERROR_MESSAGE,
+    'string.base': ERROR_MESSAGE,
+    'any.required': ERROR_MESSAGE,
+  }),
+  categoryIds: Joi.array().required().messages({
+    'any.required': 'one or more "categoryIds" not found',
+  }),
+});
+
 module.exports = {
   addUserSchema,
   addCategorySchema,
+  addPostSchema,
 };

@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { User, Category, BlogPost, PostCategory } = require('../models');
 const { validateNewPost, validateUpdatePost } = require('./validations/validateNewPost');
 
@@ -5,8 +6,6 @@ const createPost = async (newPost, userId) => {
   const { title, content, categoryIds } = newPost;
   const error = await validateNewPost(title, content, categoryIds);
   if (error.type) return error;
-
-  // const user = await User.findOne({ where: { email } });
 
   const newBlogPost = await BlogPost.create({ title, content, userId });
 
@@ -28,6 +27,22 @@ const getPosts = async () => {
   });
 
   return { type: null, message: posts };
+};
+
+const searchPost = async (q) => {
+  const postsFiltered = await BlogPost.findAll({ where: {
+    [Op.or]: [
+    { title: { [Op.like]: `%${q}%` } },
+    { content: { [Op.like]: `%${q}%` } },
+  ] },
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
+  });
+  if (!postsFiltered) return { message: [] };
+
+  return { message: postsFiltered };
 };
 
 const getByPostId = async (postId) => {
@@ -71,6 +86,7 @@ const deleteByPostId = async (userId, postId) => {
 module.exports = {
   createPost,
   getPosts,
+  searchPost,
   getByPostId,
   updateByPostId,
   deleteByPostId,

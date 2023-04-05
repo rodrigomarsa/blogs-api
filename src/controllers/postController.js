@@ -20,6 +20,18 @@ const getPosts = async (_req, res) => {
   return res.status(200).json(message);
 };
 
+const searchPost = async (req, res) => {
+  const { q } = req.query;
+  if (q) {
+    const { message } = await PostService.searchPost(q);
+    return res.status(200).json(message);
+  }
+  const { type, message } = await PostService.getPosts();
+  if (type) return res.status(mapError(type)).json({ message });
+
+  return res.status(200).json(message);
+};
+
 const getByPostId = async (req, res) => {
   const { id } = req.params;
   const { type, message } = await PostService.getByPostId(id);
@@ -55,6 +67,7 @@ const deleteByPostId = async (req, res) => {
 module.exports = {
   createPost,
   getPosts,
+  searchPost,
   getByPostId,
   updateByPostId,
   deleteByPostId,

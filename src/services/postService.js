@@ -1,5 +1,5 @@
 const { User, Category, BlogPost, PostCategory } = require('../models');
-const { validateNewPost } = require('./validations/validateNewPost');
+const { validateNewPost, validateUpdatePost } = require('./validations/validateNewPost');
 
 const createPost = async (newPost, userId) => {
   const { title, content, categoryIds } = newPost;
@@ -41,8 +41,25 @@ const getByPostId = async (postId) => {
   return { type: null, message: post };
 };
 
+const updateByPostId = async (userId, postId, postToUpdate) => {
+  const { title, content } = postToUpdate;
+  
+  const error = await validateUpdatePost(title, content);
+  if (error.type) return error;
+
+  const user = await User.findOne({ where: { id: userId } });
+  const post = await BlogPost.findByPk(postId);
+  if (user.id !== post.userId) return { type: 'UNAUTHORIZED_USER', message: 'Unauthorized user' };
+
+  await BlogPost.update({ title, content }, { where: { id: postId } });
+  const postUpdated = await getByPostId(postId);
+
+  return { type: null, message: postUpdated.message };
+};
+
 module.exports = {
   createPost,
   getPosts,
   getByPostId,
+  updateByPostId,
 };

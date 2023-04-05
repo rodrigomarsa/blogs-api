@@ -39,8 +39,22 @@ const addPostSchema = Joi.object().keys({
   }),
 });
 
+const updatePostSchema = Joi.object().keys({
+  title: Joi.string().min(1).required().messages({
+    'string.empty': ERROR_MESSAGE,
+    'string.base': ERROR_MESSAGE,
+    'any.required': ERROR_MESSAGE,
+  }),
+  content: Joi.string().min(1).required().messages({
+    'string.empty': ERROR_MESSAGE,
+    'string.base': ERROR_MESSAGE,
+    'any.required': ERROR_MESSAGE,
+  }),
+});
+
 module.exports = {
   addUserSchema,
   addCategorySchema,
   addPostSchema,
+  updatePostSchema,
 };
